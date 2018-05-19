@@ -2,8 +2,8 @@ Config = {}
 
 -- Lägg till alla vapen det ska fungera på
 Config.WeaponList = {
-	453432689,
-	-1716189206,
+	453432689, --pistol
+	-1716189206, --knife
 }
 
 Config.UnarmedHash = -1569615261
@@ -24,18 +24,20 @@ Citizen.CreateThread(function()
 	while true do
 		Citizen.Wait(0)
 
-		for i=1, #Config.WeaponList do
-			if lastWeapon ~= nil and lastWeapon ~= Config.WeaponList[i] and GetSelectedPedWeapon(GetPlayerPed(-1)) == Config.WeaponList[i] then
-				TaskPlayAnim(GetPlayerPed(-1), animDict, animIntroName, 8.0, -8.0, 2700, 0, 0, false, false, false)
-				Citizen.Wait(1000)
-				SetCurrentPedWeapon(GetPlayerPed(-1), Config.WeaponList[i], true)
+		if not IsPedInAnyVehicle(GetPlayerPed(-1), true) then
+			for i=1, #Config.WeaponList do
+				if lastWeapon ~= nil and lastWeapon ~= Config.WeaponList[i] and GetSelectedPedWeapon(GetPlayerPed(-1)) == Config.WeaponList[i] then
+					TaskPlayAnim(GetPlayerPed(-1), animDict, animIntroName, 8.0, -8.0, 2700, 0, 0, false, false, false)
+					Citizen.Wait(1000)
+					SetCurrentPedWeapon(GetPlayerPed(-1), Config.WeaponList[i], true)
+				end
+
+				if lastWeapon ~= nil and lastWeapon == Config.WeaponList[i] and GetSelectedPedWeapon(GetPlayerPed(-1)) == Config.UnarmedHash then
+					TaskPlayAnim(GetPlayerPed(-1), animDict, animOutroName, 8.0, -8.0, 2700, 0, 0, false, false, false)
+					Citizen.Wait(1000)
+					SetCurrentPedWeapon(GetPlayerPed(-1), Config.UnarmedHash, true)
+				end
 			end
-		end
-		
-		if lastWeapon ~= nil and lastWeapon ~= Config.UnarmedHash and GetSelectedPedWeapon(GetPlayerPed(-1)) == Config.UnarmedHash then
-			TaskPlayAnim(GetPlayerPed(-1), animDict, animOutroName, 8.0, -8.0, 2700, 0, 0, false, false, false)
-			Citizen.Wait(1000)
-			SetCurrentPedWeapon(GetPlayerPed(-1), Config.UnarmedHash, true)
 		end
 
 		lastWeapon = GetSelectedPedWeapon(GetPlayerPed(-1))
